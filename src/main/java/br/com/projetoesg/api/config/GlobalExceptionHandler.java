@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,6 +35,11 @@ public class GlobalExceptionHandler {
                 .toList();
 
         return buildResponse(HttpStatus.BAD_REQUEST, "Dados da requisicao sao invalidos.", details);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFound(NoResourceFoundException exception) {
+        return buildResponse(HttpStatus.NOT_FOUND, "Recurso nao encontrado.", List.of());
     }
 
     @ExceptionHandler(Exception.class)
