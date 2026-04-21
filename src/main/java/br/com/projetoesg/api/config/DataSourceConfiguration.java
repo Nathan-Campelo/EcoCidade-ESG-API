@@ -28,6 +28,15 @@ public class DataSourceConfiguration {
     }
 
     private String resolveDatasourceUrl(Environment environment) {
+        String renderUrl = firstNonBlank(
+                environment.getProperty("DATABASE_URL"),
+                environment.getProperty("RENDER_DATABASE_URL")
+        );
+
+        if (StringUtils.hasText(renderUrl)) {
+            return toJdbcUrl(renderUrl);
+        }
+
         String directUrl = firstNonBlank(
                 environment.getProperty("spring.datasource.url"),
                 environment.getProperty("DB_URL"),
@@ -38,15 +47,6 @@ public class DataSourceConfiguration {
             return directUrl;
         }
 
-        String renderUrl = firstNonBlank(
-                environment.getProperty("DATABASE_URL"),
-                environment.getProperty("RENDER_DATABASE_URL")
-        );
-
-        if (StringUtils.hasText(renderUrl)) {
-            return toJdbcUrl(renderUrl);
-        }
-
         String host = environment.getProperty("DB_HOST", "localhost");
         String port = environment.getProperty("DB_PORT", "5432");
         String databaseName = environment.getProperty("DB_NAME", "projeto_esg");
@@ -55,6 +55,15 @@ public class DataSourceConfiguration {
     }
 
     private String resolveUsername(Environment environment) {
+        String renderUrl = firstNonBlank(
+                environment.getProperty("DATABASE_URL"),
+                environment.getProperty("RENDER_DATABASE_URL")
+        );
+
+        if (StringUtils.hasText(renderUrl)) {
+            return readUserInfoPart(renderUrl, 0, "postgres");
+        }
+
         String username = firstNonBlank(
                 environment.getProperty("spring.datasource.username"),
                 environment.getProperty("DB_USERNAME"),
@@ -65,19 +74,19 @@ public class DataSourceConfiguration {
             return username;
         }
 
+        return "postgres";
+    }
+
+    private String resolvePassword(Environment environment) {
         String renderUrl = firstNonBlank(
                 environment.getProperty("DATABASE_URL"),
                 environment.getProperty("RENDER_DATABASE_URL")
         );
 
         if (StringUtils.hasText(renderUrl)) {
-            return readUserInfoPart(renderUrl, 0, "postgres");
+            return readUserInfoPart(renderUrl, 1, "postgres");
         }
 
-        return "postgres";
-    }
-
-    private String resolvePassword(Environment environment) {
         String password = firstNonBlank(
                 environment.getProperty("spring.datasource.password"),
                 environment.getProperty("DB_PASSWORD"),
@@ -86,15 +95,6 @@ public class DataSourceConfiguration {
 
         if (StringUtils.hasText(password)) {
             return password;
-        }
-
-        String renderUrl = firstNonBlank(
-                environment.getProperty("DATABASE_URL"),
-                environment.getProperty("RENDER_DATABASE_URL")
-        );
-
-        if (StringUtils.hasText(renderUrl)) {
-            return readUserInfoPart(renderUrl, 1, "postgres");
         }
 
         return "postgres";
