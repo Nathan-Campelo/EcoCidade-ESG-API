@@ -1,0 +1,12 @@
+target/
+.idea/
+.vscode/
+*.iml
+.env
+.env.staging
+.env.production
+.m2/
+.m2repo/
+.docker-tmp/
+Docker/
+logs/
