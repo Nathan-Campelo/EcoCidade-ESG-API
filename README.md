@@ -32,6 +32,7 @@ docker compose --env-file .env down
 {
   "status": "UP",
   "servico": "ecocidade-esg-api",
+  "ambiente": "local",
   "dataHora": "2026-04-21T01:17:04.893136268"
 }
 ```
@@ -71,15 +72,15 @@ Etapas do pipeline:
 Funcionamento do pipeline:
 
 - `build-test`: executa build e testes.
-- `deploy-staging`: publica no Azure App Service de staging.
-- `deploy-production`: publica no Azure App Service de producao.
+- `deploy-staging`: chama o `Deploy Hook` do Render para staging.
+- `deploy-production`: chama o `Deploy Hook` do Render para producao.
 
 Links para adicionar apos subir o projeto:
 
-- Repositorio GitHub: `ADICIONAR_LINK_DO_REPOSITORIO`
-- Workflow Actions: `ADICIONAR_LINK_DA_ABA_ACTIONS`
-- Staging Azure: `ADICIONAR_LINK_DO_STAGING`
-- Production Azure: `ADICIONAR_LINK_DO_PRODUCTION`
+- Repositorio GitHub: `https://github.com/Nathan-Campelo/EcoCidade-ESG-API`
+- Workflow Actions: `https://github.com/Nathan-Campelo/EcoCidade-ESG-API/actions`
+- Staging Render: `ADICIONAR_LINK_DO_STAGING`
+- Production Render: `ADICIONAR_LINK_DO_PRODUCTION`
 
 ## Containerizacao
 
@@ -114,6 +115,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - Uso de variaveis de ambiente para credenciais e configuracoes.
 - Uso de rede dedicada para comunicacao entre os servicos.
 - Uso de `healthcheck` para aguardar o banco antes de subir a API.
+- Arquivo `render.yaml` para descrever a infraestrutura no Render.
 
 ## Prints do funcionamento
 
@@ -137,7 +139,7 @@ projeto-esg-app   ghcr.io/owner/projeto-esg-api:latest   java -jar app.jar   Up
 projeto-esg-db    postgres:16-alpine                     postgres            Up (healthy)
 ```
 
-### Prints para adicionar depois do GitHub e Azure
+### Prints para adicionar depois do GitHub e Render
 
 - Pipeline `build-test` executando
 - Pipeline de deploy em `staging`
@@ -162,5 +164,5 @@ Observacao:
 - Docker
 - Docker Compose
 - GitHub Actions
-- Azure App Service
-- Azure Database for PostgreSQL Flexible Server
+- Render
+- Render Postgres

@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: ecocidade-esg-api-staging
+    runtime: docker
+    repo: https://github.com/Nathan-Campelo/EcoCidade-ESG-API
+    branch: develop
+    plan: free
+    region: oregon
+    autoDeployTrigger: off
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ENVIRONMENT
+        value: staging
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecocidade-esg-db
+          property: connectionString
+
+  - type: web
+    name: ecocidade-esg-api-production
+    runtime: docker
+    repo: https://github.com/Nathan-Campelo/EcoCidade-ESG-API
+    branch: main
+    plan: free
+    region: oregon
+    autoDeployTrigger: off
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecocidade-esg-db
+          property: connectionString
+
+databases:
+  - name: ecocidade-esg-db
+    plan: free
+    region: oregon
+    postgresMajorVersion: "18"
+    databaseName: ecocidade_esg
+    user: ecocidade_user
